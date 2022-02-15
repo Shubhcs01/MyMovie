@@ -1,7 +1,12 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
+// APIKEY -> aa1325d5206f870ba6fab7d3053298c5
+// https://api.themoviedb.org/3/trending/all/day?api_key=aa1325d5206f870ba6fab7d3053298c5
+//https://api.themoviedb.org/3/movie/{movie_id}/changes?api_key=<<api_key>>&page=1
+// https://api.themoviedb.org/3/movie/popular?api_key=aa1325d5206f870ba6fab7d3053298c5&language=en-US&page=1
 
-import React, { Component } from 'react'
-import { movies } from './getMovies'
+import React, { Component } from 'react';
+import axios from 'axios';
+
 
 export default class Movies extends Component {
 
@@ -9,12 +14,55 @@ export default class Movies extends Component {
         super();
         this.state = {
             hover: '',
-            pages:[1]
+            pages: [1],
+            currPage: 1,
+            movies: []
         }
     }
 
+    changeMovies = async() => {
+        // console.log(`https://api.themoviedb.org/3/movie/popular?api_key=aa1325d5206f870ba6fab7d3053298c5&language=en-US&page=${this.state.currPage}`)
+        let response = await axios.get(`https://api.themoviedb.org/3/movie/popular?api_key=aa1325d5206f870ba6fab7d3053298c5&language=en-US&page=${this.state.currPage}`)
+        let data = response.data;
+        this.setState(
+            {
+                movies: [...data.results]
+            }
+        )
+    }
+
+    handelNext = () => {
+
+       let currpage = this.state.currPage;
+        this.setState({
+            pages: [...this.state.pages, this.state.pages.length + 1],
+            currPage: currpage+1,
+        }, this.changeMovies)
+
+    }
+
+    handelPrevious = () => {
+
+        if (this.state.currPage !== 1) {
+            this.setState({
+                currPage: this.state.currPage - 1,
+            }, this.changeMovies)
+        }
+    }
+
+    handelPageClick = (val) => {
+
+        if (val !== this.state.currPage) {
+            this.setState({
+                currPage: val,
+            }, this.changeMovies)
+        }
+    }
+
+
+
     render() {
-        let movie = movies.results;
+        let movie = this.state.movies;
         return (
             movie.length === 0 ?
                 <div class="spinner-border text-primary" role="status">
@@ -45,18 +93,30 @@ export default class Movies extends Component {
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
                         <nav aria-label="Page navigation example">
                             <ul class="pagination">
-                                <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                                <li class="page-item"><a class="page-link" onClick={() => this.handelPrevious()}>Previous</a></li>
                                 {
-                                    this.state.pages.map((pageNum)=>(
-                                        <li class="page-item"><a class="page-link" href="#">{pageNum}</a></li>
+                                    this.state.pages.map((pageNum) => (
+                                        <li class="page-item"><a class="page-link" onClick={() => this.handelPageClick(pageNum)}>{pageNum}</a></li>
                                     ))
                                 }
-                                <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                                <li class="page-item"><a class="page-link" onClick={() => this.handelNext()}>Next</a></li>
                             </ul>
                         </nav>
                     </div>
 
                 </div>
+        )
+    }
+
+    async componentDidMount() {
+
+        let response = await axios.get(`https://api.themoviedb.org/3/movie/popular?api_key=aa1325d5206f870ba6fab7d3053298c5&language=en-US&page=${this.state.currPage}`)
+        let data = response.data;
+
+        this.setState(
+            {
+                movies: [...data.results]
+            }
         )
     }
 }
