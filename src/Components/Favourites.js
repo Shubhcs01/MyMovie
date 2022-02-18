@@ -7,7 +7,7 @@ export default class Favourites extends Component {
     constructor() {
         super()
         this.state = {
-            genres:['All Genre','Action',"Romance"],
+            genres: ['All Genre', 'Action', "Romance"],
             currGenre: "All Genre",
         }
 
@@ -41,22 +41,27 @@ export default class Favourites extends Component {
         let movie = movies.results;
 
         return (
-            <div>
-                <>
-                    <div>
-                        <div className='row'>
-                            <div className='col-3'>
-                                <ul class="list-group favourites-genres">
-                                    {
-                                        this.state.genres.map((genre) => (
-                                            this.state.currGenre === genre ?
-                                                <li class="list-group-item active">{genre}</li> :
-                                                <li class="list-group-item">{genre}</li>
-                                        ))
-                                    }
-                                </ul>
+
+            <>
+                <div className='main'>
+                    <div className='row'>
+                        <div className='col-3'>
+                            <ul class="list-group favourites-genres">
+                                {
+                                    this.state.genres.map((genre) => (
+                                        this.state.currGenre === genre ?
+                                            <li class="list-group-item active">{genre}</li> :
+                                            <li class="list-group-item">{genre}</li>
+                                    ))
+                                }
+                            </ul>
+                        </div>
+                        <div className='col-9'>
+                            <div className='row'>
+                                <input type='text' className='input-group-text col' placeholder='Search' ></input>
+                                <input type='number' className='input-group-text col' placeholder='Rows count'></input>
                             </div>
-                            <div className='col-9'>
+                            <div className='row'>
                                 <table class="table favourites-table">
                                     <thead>
                                         <tr>
@@ -83,8 +88,9 @@ export default class Favourites extends Component {
                             </div>
                         </div>
                     </div>
-                </>
-            </div>
+                </div>
+            </>
+
         )
     }
 }

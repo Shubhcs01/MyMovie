@@ -37,16 +37,6 @@
   }
 }
 
-.nav-bar{
-  display: flex;
-  margin-top: 1rem;
-  margin-left: 1rem;
-}
-
-.nav-bar h2{
-  margin-left: 4rem;
-  margin-top: 0.2rem;
-}
 
 .banner-card{
     width: 100vw;
